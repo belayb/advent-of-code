@@ -60,3 +60,49 @@ tibble(col1 = substr(day2, start = 1, stop = 1),
            col1 == "C" & col2 == " Y" ~  6,
            col1 == "C" & col2 == " Z" ~  7))%>%
            summarise(tot_score = sum(score))
+
+
+# Day 3: rearranging rucksacks
+# Each rucksack has two large compartments.
+# All items of a given type are meant to go into exactly one of the two compartments.
+# The Elf that did the packing made an error 
+# The Elves have made a list of all of the items currently in each rucksack
+# Every item type is identified by a single lowercase or uppercase letter (that is, a and A refer to different types of items).
+# A given rucksack always has the same number of items in each of its two compartments, so the first half of the characters represent items in the first compartment, while the second half of the characters represent items in the second compartment.
+# find the item that appers in both compartments 
+# priority:
+#Lowercase item types a through z have priorities 1 through 26.
+#Uppercase item types A through Z have priorities 27 through 52. 
+# challange:
+#Find the item type that appears in both compartments of each rucksack. What is the sum of the priorities of those item types?
+
+day3 <- readLines(here("data/day3_puz1.txt"))
+
+find_common<- function(text){
+    common <- intersect(strsplit(substring(text, 1,nchar(text)/2), '')[[1]],
+               strsplit(substring(text, nchar(text)/2 +1,nchar(text)), '')[[1]])
+    return(common)
+    }
+
+priorty <- function(common_txt){
+              if (common_txt == tolower(common_txt)){
+                which(common_txt== letters[1:26])
+                 }
+            else {
+               which(common_txt== LETTERS[1:26])+26
+                 }
+                }
+common_badge <- function(x) Reduce(intersect, lapply(x, function(x) strsplit(x, '')[[1]]))
+
+# Puzzel 1
+# apply common_text to each element of input 
+common_txt<- unlist(lapply(day3, find_common))
+sum(unlist(lapply(common_txt, priorty)))
+
+# puzzel 2
+
+# split input in to chunk of size 3
+day3_chunk <- split(day3, ceiling(seq_along(day3)/3))
+# apply common badge and priorty function for each chunk
+sum(unlist(lapply(lapply(day3_chunk, common_badge), priorty)))
+
