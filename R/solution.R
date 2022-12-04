@@ -106,3 +106,15 @@ day3_chunk <- split(day3, ceiling(seq_along(day3)/3))
 # apply common badge and priorty function for each chunk
 sum(unlist(lapply(lapply(day3_chunk, common_badge), priorty)))
 
+
+# Day 4
+day4 <- readLines(here("data/day4_puz1.txt"))
+#puzzle 1
+overlap <- function(text){
+      text <- strsplit(strsplit(text, ',')[[1]], ' ') # nolint
+      sections <- sapply(paste("c(", gsub("\\-", ":", text), ")"), 
+                           function(x) eval(parse(text = x)))
+      dim_common <-  length(intersect(sections[[1]], sections[[2]]))                               # nolint
+(dim_common == length(sections[[1]]) | dim_common == length(sections[[2]]))
+}
+sum(unlist(lapply(day4, overlap)))
