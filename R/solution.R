@@ -118,3 +118,29 @@ overlap <- function(text){
 (dim_common == length(sections[[1]]) | dim_common == length(sections[[2]]))
 }
 sum(unlist(lapply(day4, overlap)))
+
+
+#day5 - puzzle one 
+
+day5 <- read.fwf(here("data/day5_puz1.txt"), widths = rep(4,9), n=8, header = FALSE)
+day5 <- lapply(day5, \(x) rev(na.omit(sub(".+([A-Z]).+", "\\1", x)[gsub(" ", "", x) != ""])))
+
+day5_guides <- readLines(here("data/day5_puz1_instractions.txt"))
+day5_guides<- as.data.frame(do.call('rbind', lapply(day5_guides, function(x) as.numeric(strsplit(x, " " )[[1]][c(2,4,6)]))))
+
+ for( i in 1: nrow(day5_guides)){
+  day5[[day5_guides$V3[i]]] <- append(day5[[day5_guides$V3[i]]], rev(tail(day5[[day5_guides$V2[i]]], day5_guides$V1[i])))
+  day5[[day5_guides$V2[i]]] <- head(day5[[day5_guides$V2[i]]], -day5_guides$V1[i])
+ }
+
+sapply(day5, function(x) tail(x, 1))
+ 
+# day 5 - puzzle two
+ for( i in 1: nrow(day5_guides)){
+  day5[[day5_guides$V3[i]]] <- append(day5[[day5_guides$V3[i]]], tail(day5[[day5_guides$V2[i]]], day5_guides$V1[i]))
+  day5[[day5_guides$V2[i]]] <- head(day5[[day5_guides$V2[i]]], -day5_guides$V1[i])
+ }
+
+sapply(day5, function(x) tail(x, 1))
+
+
